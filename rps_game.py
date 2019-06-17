@@ -27,7 +27,7 @@ class Player:
         self.their_move = their_move
 
 
-class RandomPlayer:
+class RandomPlayer(Player):
 
     def move(self):
         return random.choice(moves)
@@ -94,12 +94,10 @@ class Game:
 
         if beats(move1, move2) is True:
             print('Player 1 Wins')
-            global p_one_score
-            p_one_score = p_one_score + 1
+            self.p1.score += 1
         elif beats(move2, move1) is True:
             print('Player 2 Wins')
-            global p_two_score
-            p_two_score = p_two_score + 1
+            self.p2.score += 1
         else:
             print('TIE')
 
@@ -108,17 +106,38 @@ class Game:
         for round in range(3):
             print(f"Round {round}:")
             self.play_round()
-            print(f"SCORE - Player One: {p_one_score}\n"
-                  f"Player Two: {p_two_score} \n")
-        if p_one_score > p_two_score:
+            print(f"SCORE - Player One: {self.p1.score}\n"
+                  f"Player Two: {self.p2.score} \n")
+        if self.p1.score > self.p2.score:
             print('Player One Wins!')
-        elif p_two_score > p_one_score:
+        elif self.p2.score > self.p1.score:
             print('Player Two Wins!')
         else:
             print('The game ended in a TIE')
         print("Game over!")
 
+    def play_single(self):
+        print("Game start!")
+        print(f"Round 1 of 1:")
+        self.play_round()
+        print(f"SCORE - Player One: {self.p1.score}\n"
+              f"Player Two: {self.p2.score} \n")
+        if self.p1.score > self.p2.score:
+            print('Player One Wins!')
+        elif self.p2.score > self.p1.score:
+            print('Player Two Wins!')
+        else:
+            print('The game ended in a TIE')
+            print("Game over!")
+
 
 if __name__ == '__main__':
-    game = Game(HumanPlayer(), CyclePlayer())
-    game.play_game()
+    round = input('Enter \'single\' or \'full\' game: ')
+    game = Game(HumanPlayer(), RandomPlayer())
+    if round == 'single':
+        game.play_single()
+    elif round == 'full':
+        game.play_game()
+    else:
+        print('Invalid Entry, try again.')
+        round = input('Enter \'single\' or \'full\' game: ')
